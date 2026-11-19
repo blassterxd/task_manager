@@ -1,0 +1,11 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+  <div class="jumbotron">
+    <h1 class="display-4">Управляйте своими задачами</h1>
+    <p class="lead">Создавайте задачи, назначайте сроки и приоритеты, отмечайте выполненное.</p>
+    {% if not user.is_authenticated %}
+      <a class="btn btn-primary btn-lg" href="{% url 'users:register' %}">Регистрация</a>
+      <a class="btn btn-outline-secondary btn-lg" href="{% url 'users:login' %}">Войти</a>
+    {% endif %}
+  </div>
+{% endblock content %}

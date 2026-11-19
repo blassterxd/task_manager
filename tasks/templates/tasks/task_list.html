@@ -1,0 +1,60 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+  <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
+    <h2 class="mb-2">Мои задачи</h2>
+    <a class="btn btn-primary mb-2" href="{% url 'tasks:create' %}">+ Новая задача</a>
+  </div>
+
+  {% for task in tasks %}
+    <div class="card mb-3 {% if task.is_overdue %}border-danger{% elif task.completed %}border-success{% endif %}">
+      <div class="card-body">
+        <div class="d-flex flex-wrap justify-content-between">
+          <h5 class="card-title mb-2 {% if task.completed %}text-muted{% endif %}">
+            {% if task.completed %}<s>{{ task.title }}</s>{% else %}{{ task.title }}{% endif %}
+          </h5>
+          <div class="mb-2">
+            {% if task.priority == 'high' %}
+              <span class="badge badge-danger">▲ {{ task.get_priority_display }}</span>
+            {% elif task.priority == 'low' %}
+              <span class="badge badge-secondary">▼ {{ task.get_priority_display }}</span>
+            {% else %}
+              <span class="badge badge-primary">● {{ task.get_priority_display }}</span>
+            {% endif %}
+            {% if task.completed %}
+              <span class="badge badge-success">✓ Выполнена</span>
+            {% elif task.is_overdue %}
+              <span class="badge badge-danger">! Просрочена</span>
+            {% else %}
+              <span class="badge badge-light border">В работе</span>
+            {% endif %}
+          </div>
+        </div>
+
+        {% if task.description %}
+          <p class="card-text">{{ task.description|linebreaksbr }}</p>
+        {% endif %}
+
+        <p class="card-text {% if task.is_overdue %}text-danger font-weight-bold{% else %}text-muted{% endif %}">
+          {% if task.due_date %}
+            Срок: {{ task.due_date|date:"d.m.Y H:i" }}
+          {% else %}
+            Срок не указан
+          {% endif %}
+        </p>
+
+        <form method="post" action="{% url 'tasks:toggle' task.id %}" class="d-inline">
+          {% csrf_token %}
+          {% if task.completed %}
+            <button type="submit" class="btn btn-outline-secondary btn-sm">Вернуть в работу</button>
+          {% else %}
+            <button type="submit" class="btn btn-success btn-sm">Отметить выполненной</button>
+          {% endif %}
+        </form>
+        <a class="btn btn-outline-primary btn-sm" href="{% url 'tasks:edit' task.id %}">Редактировать</a>
+        <a class="btn btn-outline-danger btn-sm" href="{% url 'tasks:delete' task.id %}">Удалить</a>
+      </div>
+    </div>
+  {% empty %}
+    <div class="alert alert-info">Задач пока нет. Нажмите «Новая задача», чтобы добавить первую.</div>
+  {% endfor %}
+{% endblock content %}

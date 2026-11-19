@@ -1,0 +1,5 @@
+{% extends "tasks/base.html" %}
+{% block content %}
+  <div class="alert alert-success">Вы вышли из системы.</div>
+  <a href="{% url 'users:login' %}">Войти снова</a>
+{% endblock content %}

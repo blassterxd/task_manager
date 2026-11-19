@@ -1,0 +1,15 @@
+{% extends "tasks/base.html" %}
+{% load bootstrap4 %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <h2 class="mb-3">{{ title }}</h2>
+      <form method="post">
+        {% csrf_token %}
+        {% bootstrap_form form %}
+        <button type="submit" class="btn btn-primary">Сохранить</button>
+        <a class="btn btn-outline-secondary" href="{% url 'tasks:list' %}">Отмена</a>
+      </form>
+    </div>
+  </div>
+{% endblock content %}
